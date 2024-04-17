@@ -1,5 +1,19 @@
 <?php
 
+function findAllActiveReferentiels()
+{
+    $referentiels = loadFile(PATHREFERENTIEL);
+    $activeReferentiels = array();
+    $id_promotion = $_SESSION['active_promotion']; // Récupère l'ID de la promotion active dans la session
+
+    foreach ($referentiels as $referentiel) {
+        if ($referentiel['id_promotion'] == $id_promotion) {
+            $activeReferentiels[] = $referentiel['nom_referentiel'];
+        }
+    }
+    return $activeReferentiels;
+}
+
 function findAllStudents()
 {
     $students = loadFile(PATHAPRENANT);

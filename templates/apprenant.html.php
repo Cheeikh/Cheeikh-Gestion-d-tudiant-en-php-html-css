@@ -17,17 +17,19 @@ $selectedRef = isset($_SESSION['selectedRef']) ? $_SESSION['selectedRef'] : '';
             <span>promotion 6</span>
         </div>
         <div class="contain2">
-            <span>Referentiel :</span>
+          
             <span>
-            <form id="filterForm" action="" method="post">
-    <select name="referenciel" id="select-ref" onchange="this.form.submit()">
-        <option value="">Reférenciel</option>
-        <option value="dev_web" <?= isset($_POST['referenciel']) && $_POST['referenciel'] == 'dev_web' ? 'selected' : '' ?>>dev_web</option>
-        <option value="data" <?= isset($_POST['referenciel']) && $_POST['referenciel'] == 'data' ? 'selected' : '' ?>>data</option>
-        <option value="ref_dig" <?= isset($_POST['referenciel']) && $_POST['referenciel'] == 'ref_dig' ? 'selected' : '' ?>>ref_dig</option>
-        <option value="aws" <?= isset($_POST['referenciel']) && $_POST['referenciel'] == 'aws' ? 'selected' : '' ?>>aws</option>
-        <option value="hackeuse" <?= isset($_POST['referenciel']) && $_POST['referenciel'] == 'hackeuse' ? 'selected' : '' ?>>hackeuse</option>
-    </select>
+            <form id="filterForm" action="" method="post" class="boite reference flex-cc">
+            <select name="referenciel" id="select-ref" onchange="this.form.submit()">
+    <option value="">Reférenciel</option>
+    <?php 
+    $activeReferentiels = findAllActiveReferentiels();
+    foreach ($activeReferentiels as $ref) {
+        echo "<option value=\"$ref\" " . ($selectedRef == $ref ? 'selected' : '') . ">$ref</option>";
+    }
+    ?>
+</select>
+
 </form>
             </span>
         </div>
