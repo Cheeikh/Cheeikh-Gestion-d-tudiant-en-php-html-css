@@ -11,29 +11,48 @@ $selectedRef = isset($_SESSION['selectedRef']) ? $_SESSION['selectedRef'] : '';
         <div class="left">Promotions</div>
         <div class="right">Promos - Création</div>
     </div>
-    <div class="conteneur">
-        <div class="contain1">
-            <span>Promotion :</span>
-            <span>promotion 6</span>
-        </div>
-        <div class="contain2">
-          
-            <span>
-            <form id="filterForm" action="" method="post" class="boite reference flex-cc">
-            <select name="referenciel" id="select-ref" onchange="this.form.submit()">
-    <option value="">Reférenciel</option>
-    <?php 
-    $activeReferentiels = findAllActiveReferentiels();
-    foreach ($activeReferentiels as $ref) {
-        echo "<option value=\"$ref\" " . ($selectedRef == $ref ? 'selected' : '') . ">$ref</option>";
-    }
-    ?>
-</select>
-
-</form>
-            </span>
-        </div>
+   <div class="conteneur">
+    <div class="contain1">
+        <span>Promotion :</span>
+        <span>promotion 6</span>
     </div>
+    <div class="contain2">
+    <div class="boite reference flex-cc">
+        <form id="filterForm" action="" method="post">
+            <label for="select-ref">Référenciel:</label>
+           <div class="" style="position:relative;">
+            <input type="checkbox" name="cacherlr" id="cacherlr" onchange="toggleReferentiels()" style="transform: scale(1.5);position: relative;opacity: 0;z-index: 3;" <?php echo (isset($_POST['cacherlr']) && $_POST['cacherlr'] == 'on') ? 'checked' : ''; ?>>
+            <input type="button" value="<" style="position:absolute;font-size:1vw;top:-25%;left:0;transform: rotate(-90deg);background-color:transparent;z-index:1;">
+        </div> 
+            <div class="listeRef" id="listeRef" style="display: <?php echo (isset($_POST['cacherlr']) && $_POST['cacherlr'] == 'on') ? 'none' : 'block'; ?>; background-color:gray;">
+            <?php 
+                // Récupérer les référentiels sélectionnés depuis $_POST ou $_SESSION
+                $selectedRefs = isset($_POST['referentiels']) ? $_POST['referentiels'] : (isset($_SESSION['selectedRefs']) ? $_SESSION['selectedRefs'] : []);
+                
+                $activeReferentiels = findAllActiveReferentiels();
+                foreach ($activeReferentiels as $ref) {
+                    $checked = in_array($ref, $selectedRefs) ? 'checked' : ''; // Vérifie si le référentiel est sélectionné
+                    echo "<input type=\"checkbox\" name=\"referentiels[]\" value=\"$ref\" $checked onchange=\"this.form.submit()\"><label>" . ucfirst($ref) . "</label><br>";
+                }
+            ?>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleReferentiels() {
+        var checkbox = document.getElementById('cacherlr');
+        var listeRef = document.getElementById('listeRef');
+        listeRef.style.display = checkbox.checked ? 'none' : 'block';
+        // Envoyer le formulaire lorsque le checkbox est modifié
+        checkbox.form.submit();
+    }
+</script>
+
+
+
+   </div>
     <div class="content">
             <div class="flex-col-left">
             </div>
@@ -289,3 +308,4 @@ $selectedRef = isset($_SESSION['selectedRef']) ? $_SESSION['selectedRef'] : '';
         </div>
     </div>
 </div>
+

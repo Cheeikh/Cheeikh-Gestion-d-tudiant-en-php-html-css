@@ -1,10 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+        integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Connexion</title>
 </head>
+
+<body>
+    <div class="connexion">
+        <div class="logo" style="background:url('<?php echo isset($user['image']) ? $user['image'] : ''; ?>')"></div>
+
+        <form action="" method="post">
+            <div class="login_contain">
+                <?php if (isset($login)): ?>
+                    <div class="login_required"><?php echo htmlspecialchars($login); ?></div>
+                <?php endif; ?>
+            </div>
+
+            <label for="email" style="position: absolute;top: 32.7%;left: 3.5%;">
+                Adresse Email <i class="fa-solid fa-star" style="color: #cc020d;position: absolute;top: 32%;right: -12%; font-size: 0.4vw;"></i>
+            </label>
+
+            <div class="login_username_contain">
+                <input type="text" placeholder="Entrez votre adresse email" style="margin-left: 3%;" name="email" id="email">
+                <span style="color:red;z-index:20;"><?= $validator['emailError'] ?? '' ?></span>
+                <i class="fa-solid fa-star" style="color: #cc020d;position: absolute;top: 40%;left: 35%; font-size: 0.4vw;"></i>
+            </div>
+
+            <label for="password" style="position: absolute;top: 53%;left: 3.5%;">Mot de Passe</label>
+
+            <div class="login_password_contain">
+                <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" style="margin-left: 3%;">
+                <span style="color:red;z-index:20;"><?= $validator['passwordError'] ?? '' ?></span>
+                <i class="fa-solid fa-star" style="color: #cc020d;position: absolute;top: 40%;left: 38%; font-size: 0.4vw;"></i>
+                <i class="fa-solid fa-eye-slash" id="togglePassword" style="position: absolute;right: 4%;top: 30%;font-size: 1.1vw;cursor: pointer;"></i>
+            </div>
+
+            <div class="remember_check">
+                <input type="checkbox" name="remember" id="" style="position: absolute; width: 3.5%; height: 3.5%; bottom: 20%;accent-color: #74992e;">
+                <div style="position: absolute;bottom: 20%; left: 5%; opacity: 0.5;">Se souvenir de moi</div>
+            </div>
+
+            <div class="password_forget" style="position: absolute;color: rgb(52, 174, 128);bottom: 20%;right: 2%;cursor: pointer;">Mot de passe Oublié ?</div>
+
+            <div class="login_button">
+                <button type="submit" class="login_button" style="text-decoration: none;color: white;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;border:none;">Login</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            // Toggle password visibility
+            const type = password.type === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            // Update eye icon based on visibility
+            this.classList.toggle('fa-eye');
+        });
+    </script>
+</body>
+
+
 <style>
     * {
     margin: 0;
@@ -18,14 +85,6 @@ body {
     background-color: rgb(245, 244, 244);
     display: flex;
     flex-wrap: wrap;
-}
-
-form {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 body:has(.sliding:checked) .side_bar {
@@ -84,10 +143,6 @@ input {
     color: gray;
 }
 
-button {
-    background-color: transparent;
-}
-
 input:focus {
     outline: none;
 }
@@ -127,11 +182,10 @@ a {
     height: 6%;
     width: 60%;
     margin: 15px 0 0 15px;
-    background-image: url("../img/Logo-Sonatel-Academy.png");
+    background-image: url("./Logo-Sonatel-Academy-480_1-1.png");
     background-size: contain;
     background-repeat: no-repeat;
 }
-
 
 .menu_title {
     position: absolute;
@@ -174,7 +228,6 @@ a {
     display: flex;
     align-items: center;
     padding-left: 10%;
-
 }
 
 .item:hover {
@@ -568,6 +621,9 @@ a {
     width: 30%;
     height: 60%;
     position: relative;
+    align-self: center;
+    left: 35%;
+
 }
 
 .login_contain {
@@ -708,14 +764,9 @@ a {
     font-size: 0.8vw;
 }
 
-.referentiel_picture1 {
-    background: url("../img/classroom.jpg") no-repeat;
+.referentiel_picture {
+    background: url(./classroom.jpg) no-repeat;
     background-size: contain;
-    border: 1px solid black;
-    position: absolute;
-    width: 75%;
-    height: 40%;
-    top: 20%;
 }
 
 .apprenant_contain {
@@ -756,7 +807,7 @@ a {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0,0,0,0.4);
     padding-top: 60px;
 }
 
@@ -764,7 +815,6 @@ a {
 .modal:target {
     display: block;
 }
-
 /* Affichage du modal lorsque la cible est sélectionnée */
 /* Conteneur du popup */
 .modal-content {
@@ -772,10 +822,8 @@ a {
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
-    /* Ajustement de la largeur pour les écrans larges */
-    max-width: 1200px;
-    /* Limitation de la largeur maximale */
+    width: 80%; /* Ajustement de la largeur pour les écrans larges */
+    max-width: 1200px; /* Limitation de la largeur maximale */
     position: relative;
 }
 
@@ -798,7 +846,6 @@ a {
     font-weight: bold;
     text-decoration: none;
 }
-
 /* style du bouton pour fermer */
 .close:hover,
 .close:focus {
@@ -815,8 +862,7 @@ a {
 /* Styles des sections du popup */
 .section {
     position: relative;
-    margin-top: 5%;
-    /* Espacement supérieur */
+    margin-top: 5%; /* Espacement supérieur */
 }
 
 /* Styles des boutons */
@@ -839,8 +885,7 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 5% 0;
-    /* Espacement supérieur et inférieur */
+    margin: 5% 0; /* Espacement supérieur et inférieur */
 }
 
 /* Styles pour les éléments de la première ligne de contenu */
@@ -857,8 +902,7 @@ a {
 }
 
 .line :nth-child(3) {
-    width: 48%;
-    /* Largeur réduite pour les écrans plus petits */
+    width: 48%; /* Largeur réduite pour les écrans plus petits */
     height: 1px;
     background: #aaa;
 }
@@ -884,7 +928,7 @@ a {
     margin-bottom: 10px;
 }
 
-.input-group>div {
+.input-group > div {
     width: 49%;
     margin-bottom: 10px;
 }
@@ -896,10 +940,10 @@ a {
 
 /* Styles pour le bouton "Annuler" */
 .cancel-btn {
-    padding: 10px 15px;
+    padding: 10px 15px; 
     width: 30%;
-    background: #f0edf4;
-    color: black;
+    background: #f0edf4; 
+    color: black; 
     justify-content: center;
     align-items: center;
     display: flex;
@@ -912,8 +956,7 @@ a {
 .input-group input[type="file"],
 .input-group input[type="date"],
 .input-group select {
-    width: calc(100% - 20px);
-    /* Largeur ajustée avec marge */
+    width: calc(100% - 20px); /* Largeur ajustée avec marge */
     height: 141%;
     margin-top: 12%;
     /* padding: 12px 10px; */
@@ -932,8 +975,8 @@ a {
     bottom: 10%;
     font-weight: bold;
     display: flex;
-    justify-content: space-between;
-    width: 35%;
+    justify-content: space-between; 
+    width: 35%; 
     max-width: 600px;
 }
 
@@ -943,33 +986,29 @@ a {
 }
 
 [type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
+    display: none; 
 }
-
 .date-input-container input[type="date"]::-webkit-calendar-picker-indicator {
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
-    width: 30px;
+    width: 30px; 
     height: 100%;
     padding: 0;
     margin: 0;
-    background-color: transparent;
-    /* Fond transparent pour masquer l'icône par défaut */
+    background-color: transparent; /* Fond transparent pour masquer l'icône par défaut */
 }
 
-.date-input-container input[type="date"]+.fa-calendar-day {
+.date-input-container input[type="date"] + .fa-calendar-day {
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     right: 5%;
     top: 60%;
-    height: 40%;
-    /* Largeur ajustée de l'icône */
-    width: 5%;
-    /* Largeur ajustée de l'icône */
+    height: 40%; /* Largeur ajustée de l'icône */
+    width: 5%; /* Largeur ajustée de l'icône */
     transform: translateY(-50%);
     background-color: #038e89;
     color: white;
@@ -981,105 +1020,39 @@ a {
 @media screen and (max-width: 480px) {
     .modal-content {
         width: 90%;
-        margin: 5% auto;
+        margin: 5% auto; 
     }
-
-    .input-group>div {
+    .input-group > div {
         width: 100%;
     }
-
     .line {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        flex-direction: column; 
+        align-items: center; 
+        text-align: center; 
     }
-
     .line :nth-child(1) {
-        margin-right: 0;
+        margin-right: 0; 
         margin-bottom: 5%;
     }
-
     .line :nth-child(3) {
-        width: 70%;
+        width: 70%; 
         margin-bottom: 5%;
     }
-
     .line :nth-child(4) {
         width: 80%;
         margin-right: 0;
         margin-bottom: 5%;
     }
-
     .btn-container {
-        width: 100%;
-        max-width: 600px;
+        width: 100%; 
+        max-width: 600px; 
     }
-
     .btn-container .btn {
         margin-bottom: 5px;
-        width: 100%;
+        width: 100%; 
     }
 }
-
-.button_sidebar {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: left;
-}
 </style>
-<body>
-<form action="../login_process.php" method="post">
 
-<div class="connexion">
-    <div class="logo1" style="transform: scale(2);left: 35%;position: absolute;;"></div>
-    <div class="login_contain">
-        <div class="login_required">Email et Mot de Passe Requis</div>
-    </div>
-    <label for="" style="position: absolute;top: 32.7%;left: 3.5%;">Email Address
-        <i class="fa-solid fa-star"
-            style="color: #cc020d;position: absolute;top: 32%;right: -12%; font-size: 0.4vw;"></i>
-    </label>
-    <div class="login_username_contain">
-        <input type="email" placeholder="Enter email adress" name="username" style="margin-left: 3%;">
-        <i class="fa-solid fa-star"
-            style="color: #cc020d;position: absolute;top: 40%;left: 35%; font-size: 0.4vw;"></i>
-    </div>
-    <label for="" style="position: absolute;top: 53%;left: 3.5%;">Password</label>
-    <div class="login_password_contain">
-        <input type="password" name="password" placeholder="Enter your password" style="margin-left: 3%;">
-        <i class="fa-solid fa-star"
-            style="color: #cc020d;position: absolute;top: 40%;left: 38%; font-size: 0.4vw;"></i>
-        <i class="fa-solid fa-eye-slash"
-            style="position: absolute;right: 4%;top: 30%;font-size: 1.1vw;cursor: pointer;"></i>
-    </div>
-    <div class="remember_check">
-        <input type="checkbox" name="" id=""
-            style="position: absolute; width: 3.5%; height: 3.5%; bottom: 20%;accent-color: #74992e;">
-        <div style="position: absolute;bottom: 20%; left: 5%; opacity: 0.5;">Remember me</div>
-    </div>
-    <div class="password_forget"
-        style="position: absolute;color: rgb(52, 174, 128);bottom: 20%;right: 2%;cursor: pointer;">Mot de passe
-        Oublié ?
-    </div>
-    <div class="login_button">
-
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_POST["connect"])) {
-            if ($_POST["connect"] == "clic") {
-                echo "le bouton a ete cliquer";
-            } else {
-                echo '   aucune action';
-            }
-        }
-
-        ?>
-        <button type="submit"
-            style="text-decoration: none;color: white;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;">Log
-            in
-        </button>
-</form>
-</div>
-</div>
-</body>
 </html>
+

@@ -39,12 +39,9 @@ if (isset($_POST['checkbox'])) {
     // Stocker l'ID de la promotion active dans la session
     $_SESSION['active_promotion'] = $selected_checkbox;
 } else {
-    // Si aucune case cochée, vérifiez s'il y a une promotion active dans la session
     if (isset($_SESSION['active_promotion'])) {
-        // S'il y a une promotion active dans la session, utilisez-la
         modifierStatut($_SESSION['active_promotion'], 1);
     } else {
-        // Sinon, cochez la dernière promotion
         $last_promotion = end($promotions); // Récupérer la dernière promotion du tableau
         $last_promotion_id = $last_promotion['id_promotion'];
         modifierStatut($last_promotion_id, 1);

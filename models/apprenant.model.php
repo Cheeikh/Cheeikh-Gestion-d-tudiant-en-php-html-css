@@ -1,5 +1,7 @@
 <?php
 
+session_start(); // Démarrer la session
+
 function findAllActiveReferentiels()
 {
     $referentiels = loadFile(PATHREFERENTIEL);
@@ -8,7 +10,7 @@ function findAllActiveReferentiels()
 
     foreach ($referentiels as $referentiel) {
         if ($referentiel['id_promotion'] == $id_promotion) {
-            $activeReferentiels[] = $referentiel['nom_referentiel'];
+            $activeReferentiels[] = $referentiel['referenciel'];
         }
     }
     return $activeReferentiels;
@@ -18,50 +20,52 @@ function findAllStudents()
 {
     $students = loadFile(PATHAPRENANT);
 
-// Vérifie s'il y a une promotion active
-if (isset($_SESSION['active_promotion'])) {
-    $activePromotion = $_SESSION['active_promotion'];
+    // Vérifie s'il y a une promotion active
+    if (isset($_SESSION['active_promotion'])) {
+        $activePromotion = $_SESSION['active_promotion'];
 
-    // Si un filtre de référence est également défini
-    if (isset($_POST['referenciel'])) {
-        $referenciel_filtre = $_POST['referenciel'];
-        $filteredStudents = array_filter($students, function ($student) use ($activePromotion, $referenciel_filtre) {
-            return $student['id_promotion'] == $activePromotion && $student['referenciel'] == $referenciel_filtre;
-        });
-        return $filteredStudents;
-    } else {
-        // Récupérer la valeur sélectionnée du filtre de référence depuis la session
-        $selectedRef = isset($_SESSION['selectedRef']) ? $_SESSION['selectedRef'] : '';
-
-        // Filtrer les étudiants en fonction de la valeur sélectionnée du filtre de référence
-        if (!empty($selectedRef)) {
-            $filteredStudents = array_filter($students, function ($student) use ($activePromotion, $selectedRef) {
-                return $student['id_promotion'] == $activePromotion && $student['referenciel'] == $selectedRef;
+        // Si des référentiels sont sélectionnés
+        if (isset($_POST['referentiels']) && !empty($_POST['referentiels'])) {
+            $selectedRefs = $_POST['referentiels'];
+            $filteredStudents = array_filter($students, function ($student) use ($activePromotion, $selectedRefs) {
+                return $student['id_promotion'] == $activePromotion && in_array($student['referenciel'], $selectedRefs);
             });
+            $_SESSION['selectedRefs'] = $selectedRefs; // Enregistrer les référentiels sélectionnés dans la session
+            return $filteredStudents;
         } else {
-            $filteredStudents = array_filter($students, function ($student) use ($activePromotion) {
-                return $student['id_promotion'] == $activePromotion;
-            });
-        }
-        
-        return $filteredStudents;
-    }
-} else {
-    // Créer un tableau vide avec les clés attendues
-    $emptyStudent = [
-        'image' => '',
-        'nom' => '',
-        'prenom' => '',
-        'email' => '',
-        'genre' => '',
-        'telephone' => '',
-        'action' => '',
-        'id_promotion' => '',
-        'referenciel' => ''
-    ];
+            // Récupérer les référentiels sélectionnés depuis la session
+            $selectedRefs = isset($_SESSION['selectedRefs']) ? $_SESSION['selectedRefs'] : [];
 
-    // Retourne un tableau vide contenant un étudiant avec des valeurs vides
-    return array($emptyStudent);
+            // Filtrer les étudiants en fonction des référentiels sélectionnés
+            if (!empty($selectedRefs)) {
+                $filteredStudents = array_filter($students, function ($student) use ($activePromotion, $selectedRefs) {
+                    return $student['id_promotion'] == $activePromotion && in_array($student['referenciel'], $selectedRefs);
+                });
+            } else {
+                // Si aucun référentiel n'est sélectionné, afficher tous les étudiants de la promotion active
+                $filteredStudents = array_filter($students, function ($student) use ($activePromotion) {
+                    return $student['id_promotion'] == $activePromotion;
+                });
+            }
+            
+            return $filteredStudents;
+        }
+    } else {
+        // Créer un tableau vide avec les clés attendues
+        $emptyStudent = [
+            'image' => '',
+            'nom' => '',
+            'prenom' => '',
+            'email' => '',
+            'genre' => '',
+            'telephone' => '',
+            'action' => '',
+            'id_promotion' => '',
+            'referenciel' => ''
+        ];
+
+        // Retourner un tableau vide contenant un étudiant avec des valeurs vides
+        return array($emptyStudent);
     }
 }
 
@@ -94,15 +98,31 @@ function recherche($filtrer)
     }
     return $result;
 }
+
 if (isset($_POST["search"])) {
     $apprenants = recherche($_POST["search"]);
 }
 
-// Appliquer le filtrage
-$totalStudents = findAllStudents(); // Récupère tous les étudiants
+// Sauvegarder l'état du checkbox dans la session
+if (isset($_POST['cacherlr'])) {
+    $_SESSION['cacherlr'] = $_POST['cacherlr'];
+}
+
+// Récupérer l'état du checkbox à partir de la session
+$cacherlr = isset($_SESSION['cacherlr']) ? $_SESSION['cacherlr'] : '';
+
+// Appliquer le filtrage en fonction de l'état du checkbox
+if ($cacherlr == 'on') {
+    // Afficher tous les étudiants sans filtrage
+    $totalStudents = findAllStudents();
+} else {
+    // Filtrer les étudiants en fonction des référentiels sélectionnés
+    $totalStudents = array_filter(findAllStudents(), 'filtrerApprenants');
+}
+
 
 // Calculer les informations de pagination
-$eleByPage = 1;
+$eleByPage = 4;
 $totalPage = ceil(count($totalStudents) / $eleByPage);
 
 // Stocker les informations de pagination dans la session

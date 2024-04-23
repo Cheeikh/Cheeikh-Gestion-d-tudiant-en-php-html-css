@@ -1094,3 +1094,39 @@ tr:nth-child(even) {
       height: 100px;
     }
   }
+
+
+  #cacherlr {
+    display: none;
+}
+
+/* Style du label pour le symbole '+' */
+.plus-label {
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    position: relative;
+}
+
+/* Positionnement du symbole '+' par-dessus le checkbox */
+#cacherlr + .plus-label:before {
+    content: '+';
+    position: absolute;
+    top: -10px; /* Ajustez cette valeur pour le positionnement vertical */
+    left: 0;
+}
+
+/* Style lorsque le checkbox est coché */
+#cacherlr:checked + .plus-label:before {
+    content: ''; /* Le symbole '+' n'est pas affiché lorsque le checkbox est coché */
+}
+
+/* Style lorsque le checkbox n'est pas coché */
+#cacherlr:not(:checked) + .plus-label {
+    display: none; /* Le label est caché lorsque le checkbox n'est pas coché */
+}
+
+/* Style lorsque le checkbox est coché */
+#cacherlr:checked + .listeRef {
+    display: none;
+}
